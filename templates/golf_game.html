@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Đánh Golf</title>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            color: #fff; /* Chữ trắng để nổi bật trên nền tối */
+            font-family: Arial, sans-serif; /* Chọn font dễ đọc */
+            text-align: center;
+        }
+        h1 {
+            color: #ffeb3b; /* Màu vàng sáng cho tiêu đề */
+            font-size: 3em; /* Tăng kích thước tiêu đề */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #000; /* Thêm đổ bóng để dễ nhìn hơn */
+        }
+        .button {
+            background-color: rgba(255, 255, 255, 0.8); /* Nút có màu nền trắng trong suốt */
+            color: #333; /* Màu chữ đen để dễ nhìn hơn */
+            border: none;
+            padding: 15px 32px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 50px; /* Nút tròn hơn */
+            transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà khi hover */
+        }
+        .button:hover {
+            background-color: rgba(255, 255, 255, 1); /* Màu nền trắng khi hover */
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 24px; /* Tăng kích thước chữ kết quả */
+            color: #ffeb3b; /* Màu vàng giống tiêu đề */
+            text-shadow: 1px 1px 2px #000;
+            font-weight: bold;
+        }
+        img {
+            width: 350px; /* Tăng kích thước hình ảnh golf */
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px; /* Bo tròn nhẹ cho hình ảnh */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng cho hình ảnh */
+        }
+    </style>
+</head>
+<body>
+    <h1>Trò Chơi Đánh Golf</h1>
+    <img src="{{ url_for('static', filename='images/golf_image.jpg') }}" alt="Hình ảnh golf">
+    <button class="button" id="hitButton">Đánh Bóng!</button>
+    <div id="result"></div>
+    <button class="button" onclick="location.href='/'">Quay Lại</button>
+
+    <script>
+        function hitBall() {
+            const randomScore = Math.floor(Math.random() * 100) + 1; // Điểm ngẫu nhiên từ 1 đến 100
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `Bạn đã đánh được ${randomScore} điểm!`;
+        }
+
+        document.getElementById('hitButton').addEventListener('click', hitBall);
+    </script>
+</body>
+</html>

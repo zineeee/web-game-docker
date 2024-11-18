@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Đoán Số</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url("{{ url_for('static', filename='images/guess_number_bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 10px;
+            margin: 15px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trò Chơi Đoán Số</h1>
+        <p>Hãy đoán một số từ 1 đến 100.</p>
+        <input type="number" id="userGuess" placeholder="Nhập số của bạn" min="1" max="100">
+        <br>
+        <button class="button" onclick="checkGuess()">Kiểm Tra</button>
+        <button class="button" onclick="location.href='/'">Quay Lại</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        function checkGuess() {
+            const userGuess = parseInt(document.getElementById('userGuess').value);
+            const targetNumber = 50; // Số mà hệ thống đã chọn
+
+            if (userGuess === targetNumber) {
+                document.getElementById('message').innerText = 'Chúc mừng! Bạn đã đoán đúng!';
+                document.getElementById('message').style.color = '#5cb85c'; // Đổi màu thành xanh khi đoán đúng
+            } else if (userGuess < targetNumber) {
+                document.getElementById('message').innerText = 'Số bạn đoán quá thấp. Hãy thử lại!';
+            } else {
+                document.getElementById('message').innerText = 'Số bạn đoán quá cao. Hãy thử lại!';
+            }
+        }
+    </script>
+</body>
+</html>
