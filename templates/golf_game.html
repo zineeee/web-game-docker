@@ -1,75 +1,10 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trò Chơi Đánh Golf</title>
-    <style>
-        body {
-            background-image: url("{{ url_for('static', filename='images/background.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-            color: #fff; /* Chữ trắng để nổi bật trên nền tối */
-            font-family: Arial, sans-serif; /* Chọn font dễ đọc */
-            text-align: center;
-        }
-        h1 {
-            color: #ffeb3b; /* Màu vàng sáng cho tiêu đề */
-            font-size: 3em; /* Tăng kích thước tiêu đề */
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px #000; /* Thêm đổ bóng để dễ nhìn hơn */
-        }
-        .button {
-            background-color: rgba(255, 255, 255, 0.8); /* Nút có màu nền trắng trong suốt */
-            color: #333; /* Màu chữ đen để dễ nhìn hơn */
-            border: none;
-            padding: 15px 32px;
-            font-size: 18px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 50px; /* Nút tròn hơn */
-            transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà khi hover */
-        }
-        .button:hover {
-            background-color: rgba(255, 255, 255, 1); /* Màu nền trắng khi hover */
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 24px; /* Tăng kích thước chữ kết quả */
-            color: #ffeb3b; /* Màu vàng giống tiêu đề */
-            text-shadow: 1px 1px 2px #000;
-            font-weight: bold;
-        }
-        img {
-            width: 350px; /* Tăng kích thước hình ảnh golf */
-            height: auto;
-            margin-top: 20px;
-            border-radius: 10px; /* Bo tròn nhẹ cho hình ảnh */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng cho hình ảnh */
-        }
-    </style>
-</head>
-<body>
-    <h1>Trò Chơi Đánh Golf</h1>
-    <img src="{{ url_for('static', filename='images/golf_image.jpg') }}" alt="Hình ảnh golf">
-    <button class="button" id="hitButton">Đánh Bóng!</button>
-    <div id="result"></div>
-    <button class="button" onclick="location.href='/'">Quay Lại</button>
-
-    <script>
-        function hitBall() {
-            const randomScore = Math.floor(Math.random() * 100) + 1; // Điểm ngẫu nhiên từ 1 đến 100
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `Bạn đã đánh được ${randomScore} điểm!`;
-        }
-
-        document.getElementById('hitButton').addEventListener('click', hitBall);
-    </script>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Golf mini{% endblock %}
+{% block content %}
+<div class="game-layout"><section class="game-main"><a class="text-link" href="{{ url_for('home') }}">← Tất cả trò chơi</a><div style="margin-top:23px"><span class="eyebrow">Accuracy challenge</span><h1>Golf mini</h1><p>Thực hiện 5 cú đánh. Mỗi cú có khoảng cách ngẫu nhiên, tổng điểm cuối vòng sẽ được lưu vào tài khoản của bạn.</p></div>
+<div class="game-display"><div><strong>{{ round_data['total'] }}</strong><br><span>TỔNG KHOẢNG CÁCH · YARDS</span></div></div>
+<div class="stats-row" style="margin:0 0 22px"><div class="stat-card"><span class="stat-number">{{ round_data['shots']|length }}/5</span><span class="stat-label">Cú đánh</span></div><div class="stat-card"><span class="stat-number">{{ 5 - round_data['shots']|length }}</span><span class="stat-label">Còn lại</span></div><div class="stat-card"><span class="stat-number">{% if round_data['completed'] %}✓{% else %}…{% endif %}</span><span class="stat-label">Trạng thái</span></div></div>
+{% if round_data['shots'] %}<div class="panel" style="margin-bottom:18px"><h3>Kết quả từng cú đánh</h3><div class="rank-list">{% for shot in round_data['shots'] %}<div class="rank-row"><span class="rank-number">{{ loop.index }}</span><span class="rank-name">Cú đánh {{ loop.index }}</span><span class="rank-score">{{ shot }} yards</span></div>{% endfor %}</div></div>{% endif %}
+<form method="post" class="hero-actions"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% if round_data['completed'] %}<button class="button button-primary" type="submit" name="action" value="restart">Chơi vòng mới ↗</button>{% else %}<button class="button button-primary" type="submit" name="action" value="hit">⛳ Đánh bóng</button><button class="button button-ghost" type="submit" name="action" value="restart">Bắt đầu lại</button>{% endif %}</form></section>
+<aside class="game-side"><div class="panel"><h3>Luật chơi</h3><div class="rule-row"><span>Số cú đánh</span><strong>5</strong></div><div class="rule-row"><span>Mỗi cú</span><strong>50–300 yards</strong></div><div class="rule-row"><span>Cách tính điểm</span><strong>Tổng yards</strong></div><div class="rule-row"><span>Lưu thành tích</span><strong>Sau cú thứ 5</strong></div></div><div class="panel"><h3>Mục tiêu</h3><p class="empty-state">Hoàn thành đủ 5 cú để ghi nhận thành tích vào hồ sơ và bảng xếp hạng.</p></div></aside></div>
+{% endblock %}
