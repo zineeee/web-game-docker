@@ -299,7 +299,7 @@ def guess_game():
             flash("Chưa đúng — số bí mật nhỏ hơn số bạn vừa nhập.", "info")
         return redirect(url_for("guess_game"))
 
-    if "guess_secret" not in session or session.get("guess_completed"):
+    if "guess_secret" not in session:
         session["guess_secret"] = random.randint(1, 100)
         session["guess_attempts"] = 0
         session["guess_completed"] = False
