@@ -234,28 +234,48 @@ def dashboard():
 
 @app.route("/leaderboard")
 def leaderboard():
+    game_filter = request.args.get("game", "all")
+    allowed_games = {"all", "Đoán số", "Golf mini"}
+    if game_filter not in allowed_games:
+        game_filter = "all"
+
     with closing(get_db_connection()) as conn:
-        scores = conn.execute(
-            """
-            SELECT u.username AS name, s.game_name, s.score, s.created_at
-            FROM game_scores s JOIN users u ON u.id = s.user_id
-            ORDER BY s.score DESC, s.created_at ASC LIMIT 50
-            """
-        ).fetchall()
-        legacy_scores = conn.execute(
-            """
-            SELECT name, 'Trò chơi cũ' AS game_name, score,
-                   CURRENT_TIMESTAMP AS created_at
-            FROM leaderboard
-            ORDER BY score DESC LIMIT 20
-            """
-        ).fetchall()
+        if game_filter == "all":
+            scores = conn.execute(
+                """
+                SELECT u.username AS name, s.game_name, s.score, s.created_at
+                FROM game_scores s JOIN users u ON u.id = s.user_id
+                ORDER BY s.score DESC, s.created_at ASC LIMIT 50
+                """
+            ).fetchall()
+            legacy_scores = conn.execute(
+                """
+                SELECT name, 'Trò chơi cũ' AS game_name, score,
+                       CURRENT_TIMESTAMP AS created_at
+                FROM leaderboard
+                ORDER BY score DESC LIMIT 20
+                """
+            ).fetchall()
+        else:
+            scores = conn.execute(
+                """
+                SELECT u.username AS name, s.game_name, s.score, s.created_at
+                FROM game_scores s JOIN users u ON u.id = s.user_id
+                WHERE s.game_name = ?
+                ORDER BY s.score DESC, s.created_at ASC LIMIT 50
+                """,
+                (game_filter,),
+            ).fetchall()
+            legacy_scores = []
+
     combined_scores = sorted(
         list(scores) + list(legacy_scores),
         key=lambda row: int(row["score"]),
         reverse=True,
     )[:50]
-    return render_template("leaderboard.html", scores=combined_scores)
+    return render_template(
+        "leaderboard.html", scores=combined_scores, game_filter=game_filter
+    )
 
 
 @app.route("/guess_game", methods=["GET", "POST"])
