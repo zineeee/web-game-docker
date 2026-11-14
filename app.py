@@ -2,13 +2,18 @@ from flask import Flask, request, render_template, redirect, url_for
 import random
 import sqlite3
 
+import os
+
+
 app = Flask(__name__)
 
 # Hàm kết nối đến cơ sở dữ liệu SQLite
 def get_db_connection():
-    conn = sqlite3.connect('game.db')  # Kết nối tới file game.db
-    conn.row_factory = sqlite3.Row  # Kết quả trả về ở dạng từ điển
+    db_path = os.getenv("DATABASE_PATH", "game.db")
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
     return conn
+
 
 # Trang chủ, hiển thị giao diện game
 @app.route('/')
